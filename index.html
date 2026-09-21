@@ -3,14 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kamera Depan</title>
+    <title>Pilih Kamera</title>
+    <style>
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        select {
+            padding: 5px;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
-    <h3>Ambil Gambar</h3>
+    <div class="header">
+        <h3>Ambil Gambar</h3>
+        <!-- Dropdown untuk memilih kamera -->
+        <select id="kameraSelect"></select>
+    </div>
+    
     <video id="video" width="100%" autoplay playsinline></video>
     <br>
     <button id="snap">Jepret Foto</button>
     <br>
+    
     <canvas id="canvas" style="display:none;"></canvas>
     <img id="hasil" src="" alt="Hasil Foto" style="display:none; width: 100%; margin-top: 10px;">
 
@@ -19,15 +37,71 @@
         const canvas = document.getElementById('canvas');
         const snap = document.getElementById('snap');
         const hasil = document.getElementById('hasil');
+        const kameraSelect = document.getElementById('kameraSelect');
+        
+        let currentStream; // Menyimpan stream kamera yang sedang aktif
 
-        // Meminta akses kamera depan
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
-            .then(function(stream) {
+        // Fungsi untuk menghentikan kamera yang sedang menyala
+        function stopMediaTracks(stream) {
+            if (stream) {
+                stream.getTracks().forEach(track => {
+                    track.stop();
+                });
+            }
+        }
+
+        // Fungsi untuk mengambil daftar kamera yang tersedia
+        async function getDaftarKamera() {
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoDevices = devices.filter(device => device.kind === 'videoinput');
+                
+                kameraSelect.innerHTML = ''; // Kosongkan opsi sebelumnya
+                
+                videoDevices.forEach((device, index) => {
+                    const option = document.createElement('option');
+                    option.value = device.deviceId;
+                    // Label akan muncul jika user sudah memberikan izin kamera
+                    option.text = device.label || `Kamera ${index + 1}`;
+                    kameraSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error("Gagal mendeteksi kamera:", error);
+            }
+        }
+
+        // Fungsi untuk menyalakan kamera berdasarkan Device ID
+        async function mulaiKamera(deviceId = null) {
+            // Matikan kamera yang aktif sebelumnya (jika ada)
+            stopMediaTracks(currentStream);
+
+            // Jika ada deviceId spesifik, gunakan itu. Jika tidak, default ke kamera depan (user)
+            const constraints = {
+                video: deviceId ? { deviceId: { exact: deviceId } } : { facingMode: 'user' }
+            };
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                currentStream = stream;
                 video.srcObject = stream;
-            })
-            .catch(function(err) {
-                alert("Akses kamera ditolak atau tidak tersedia: " + err);
-            });
+                
+                // Ambil daftar kamera hanya sekali saat pertama kali diizinkan
+                // Ini penting karena browser tidak akan memberikan 'label' nama kamera sebelum izin diberikan
+                if (kameraSelect.options.length === 0) {
+                    await getDaftarKamera();
+                }
+            } catch (error) {
+                alert("Akses kamera ditolak atau tidak tersedia: " + error);
+            }
+        }
+
+        // Listener jika user mengganti pilihan di dropdown
+        kameraSelect.addEventListener('change', () => {
+            mulaiKamera(kameraSelect.value);
+        });
+
+        // Jalankan kamera saat halaman pertama kali dibuka
+        mulaiKamera();
 
         // Menangkap gambar saat tombol ditekan
         snap.addEventListener("click", function() {
@@ -36,7 +110,6 @@
             const context = canvas.getContext('2d');
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             
-            // Konversi gambar di canvas menjadi file PNG dan tampilkan
             hasil.src = canvas.toDataURL("image/png");
             hasil.style.display = 'block';
         });
