@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kamera Depan</title>
+</head>
+<body>
+    <h3>Ambil Gambar</h3>
+    <video id="video" width="100%" autoplay playsinline></video>
+    <br>
+    <button id="snap">Jepret Foto</button>
+    <br>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <img id="hasil" src="" alt="Hasil Foto" style="display:none; width: 100%; margin-top: 10px;">
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const snap = document.getElementById('snap');
+        const hasil = document.getElementById('hasil');
+
+        // Meminta akses kamera depan
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
+            .then(function(stream) {
+                video.srcObject = stream;
+            })
+            .catch(function(err) {
+                alert("Akses kamera ditolak atau tidak tersedia: " + err);
+            });
+
+        // Menangkap gambar saat tombol ditekan
+        snap.addEventListener("click", function() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            // Konversi gambar di canvas menjadi file PNG dan tampilkan
+            hasil.src = canvas.toDataURL("image/png");
+            hasil.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
