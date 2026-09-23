@@ -3,71 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Remote Kamera Pro</title>
+    <title>CamConnect Pro - Gemini Style</title>
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <!-- Library QR Code -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-brand">📷 CamConnect Pro</div>
-        <button id="btnHome" class="nav-link hidden">Kembali ke Menu</button>
-    </nav>
-
-    <div class="container">
-        <!-- PEMILIHAN MODE -->
-        <div id="modeSelection" class="card fade-in">
-            <h2>Pilih Peran</h2>
-            <div class="btn-group">
-                <button id="btnPenerima" class="btn btn-primary">📺 Monitor (Penerima)</button>
-                <button id="btnPengirim" class="btn btn-secondary">📱 Kamera (Pengirim)</button>
+    <div class="app-container">
+        <!-- SIDEBAR (Menu Kiri) -->
+        <aside class="sidebar">
+            <div class="brand">✨ CamConnect</div>
+            
+            <div class="menu-section">
+                <span class="menu-label">Pilih Sebagai</span>
+                <button id="navMonitor" class="nav-btn active">📺 Monitor CCTV</button>
+                <button id="navKamera" class="nav-btn">📱 Kamera Web</button>
+                <button id="navGaleri" class="nav-btn">🖼️ Galeri</button>
             </div>
-        </div>
 
-        <!-- UI PENERIMA -->
-        <div id="uiPenerima" class="card hidden fade-in">
-            <div class="header-penerima">
-                <h3>Monitor CCTV</h3>
-                <div class="id-badge">ID: <span id="myId">Memuat...</span></div>
-            </div>
-            <p class="text-muted">Status: <span id="statusPenerima">Menunggu koneksi...</span></p>
-            <div id="videoContainer" class="video-grid"></div>
-        </div>
-
-        <!-- UI PENGIRIM -->
-        <div id="uiPengirim" class="card hidden fade-in">
-            <h3>Kirim Kamera</h3>
-            <div class="form-group">
-                <label>Pilih Kamera Aktif</label>
+            <!-- Pengaturan Kamera (Hanya muncul jika mode Kamera dipilih) -->
+            <div id="sidebarKameraSettings" class="menu-section hidden">
+                <span class="menu-label">Pengaturan Kamera</span>
                 <select id="kameraSelect" class="form-control"></select>
+                
+                <div id="nativeControls" class="hidden" style="margin-top: 10px;">
+                    <button id="btnTorch" class="nav-btn hidden">🔦 Nyalakan Flash</button>
+                    <div id="zoomContainer" class="hidden" style="margin-top: 10px;">
+                        <label style="font-size: 0.8rem;">🔍 Zoom:</label>
+                        <input type="range" id="zoomSlider" style="width: 100%;">
+                    </div>
+                </div>
             </div>
+        </aside>
+
+        <!-- KONTEN UTAMA (Kanan) -->
+        <main class="main-content">
             
-            <!-- Fitur Kamera Bawaan -->
-            <div id="nativeControls" class="form-group hidden" style="background: #f3f4f6; padding: 10px; border-radius: 8px;">
-                <label>🎛️ Fitur Kamera Bawaan:</label>
-                <button id="btnTorch" class="btn btn-secondary hidden" style="width: 100%; margin-bottom: 10px;">🔦 Nyalakan Flash/Senter</button>
-                <div id="zoomContainer" class="hidden">
-                    <label style="font-size: 0.8rem;">🔍 Zoom:</label>
-                    <input type="range" id="zoomSlider" style="width: 100%;">
+            <!-- TAMPILAN MONITOR -->
+            <div id="viewMonitor" class="view-panel">
+                
+                <!-- Status Belum Terhubung -->
+                <div id="monitorDisconnected" class="center-stage">
+                    <h3>Siap Menerima Kamera</h3>
+                    <!-- Tempat QR Code di Tengah -->
+                    <div id="qrcode" class="qr-box"></div>
+                    <!-- ID di Bawah QR -->
+                    <h1 class="main-id">ID: <span id="myIdLarge">Memuat...</span></h1>
+                    <p class="text-muted">Scan QR atau masukkan ID di atas pada perangkat kamera.</p>
+                </div>
+
+                <!-- Status Terhubung -->
+                <div id="monitorConnected" class="hidden">
+                    <!-- ID Pindah ke Kanan Atas -->
+                    <div class="top-bar">
+                        <span class="status-badge">🟢 Terhubung</span>
+                        <div class="id-badge-small">ID Monitor: <span id="myIdSmall"></span></div>
+                    </div>
+                    <div id="videoContainer" class="video-grid"></div>
+                </div>
+
+            </div>
+
+            <!-- TAMPILAN KAMERA -->
+            <div id="viewKamera" class="view-panel hidden">
+                <div class="top-bar">
+                    <div class="input-group">
+                        <input type="text" id="targetId" class="form-control" placeholder="Masukkan ID Monitor (8 Karakter)" maxlength="8">
+                        <button id="btnConnect" class="btn btn-primary">Sambungkan</button>
+                    </div>
+                    <button id="btnDisconnectSender" class="btn btn-danger hidden">✖ Putus</button>
+                </div>
+                
+                <div class="video-wrapper">
+                    <div class="screen-awake-indicator">☀️ Layar Aktif</div>
+                    <video id="videoKirim" autoplay playsinline muted></video>
+                </div>
+                <p id="statusPengirim" class="text-muted" style="margin-top:10px;"></p>
+            </div>
+
+            <!-- TAMPILAN GALERI -->
+            <div id="viewGaleri" class="view-panel hidden">
+                <h2>Galeri & Penyimpanan</h2>
+                <div class="gallery-info">
+                    <p><b>Untuk Pengguna Komputer/Browser:</b> File foto dan video akan otomatis ditanyakan untuk disimpan (Save As) atau masuk ke folder <i>Downloads</i> Anda.</p>
+                    <p><b>Untuk Pengguna Android (APK):</b> Foto dan video akan tersimpan otomatis di Galeri internal HP (Folder Pictures/Movies).</p>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label>ID Penerima</label>
-                <div class="input-group">
-                    <input type="text" id="targetId" class="form-control" placeholder="Contoh: A1B2C3D4" maxlength="8">
-                    <button id="btnConnect" class="btn btn-primary">Sambungkan</button>
-                </div>
-            </div>
-            
-            <p id="statusPengirim" class="text-muted"></p>
-
-            <div class="video-wrapper">
-                <button id="btnDisconnectSender" class="btn-close-overlay" title="Putuskan Koneksi">✖</button>
-                <!-- Menambahkan indikator baterai/layar -->
-                <div class="screen-awake-indicator">☀️ Layar Aktif (Anti-Sleep)</div>
-                <video id="videoKirim" autoplay playsinline muted></video>
-            </div>
-        </div>
+        </main>
     </div>
 
     <script src="script.js"></script>
