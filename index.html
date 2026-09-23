@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Remote Kamera Modern</title>
+    <title>Remote Kamera Pro</title>
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Navigation Bar -->
     <nav class="navbar">
-        <div class="nav-brand">📷 CamConnect</div>
+        <div class="nav-brand">📷 CamConnect Pro</div>
         <button id="btnHome" class="nav-link hidden">Kembali ke Menu</button>
     </nav>
 
@@ -18,9 +17,8 @@
         <!-- PEMILIHAN MODE -->
         <div id="modeSelection" class="card fade-in">
             <h2>Pilih Peran</h2>
-            <p class="subtitle">Tentukan perangkat ini akan berfungsi sebagai apa</p>
             <div class="btn-group">
-                <button id="btnPenerima" class="btn btn-primary">📺 Monitor CCTV (Penerima)</button>
+                <button id="btnPenerima" class="btn btn-primary">📺 Monitor (Penerima)</button>
                 <button id="btnPengirim" class="btn btn-secondary">📱 Kamera (Pengirim)</button>
             </div>
         </div>
@@ -31,8 +29,7 @@
                 <h3>Monitor CCTV</h3>
                 <div class="id-badge">ID: <span id="myId">Memuat...</span></div>
             </div>
-            <p class="text-muted">Masukkan 8 karakter ID di atas ke perangkat pengirim.</p>
-            
+            <p class="text-muted">Status: <span id="statusPenerima">Menunggu koneksi...</span></p>
             <div id="videoContainer" class="video-grid"></div>
         </div>
 
@@ -43,18 +40,31 @@
                 <label>Pilih Kamera Aktif</label>
                 <select id="kameraSelect" class="form-control"></select>
             </div>
+            
+            <!-- Fitur Kamera Bawaan -->
+            <div id="nativeControls" class="form-group hidden" style="background: #f3f4f6; padding: 10px; border-radius: 8px;">
+                <label>🎛️ Fitur Kamera Bawaan:</label>
+                <button id="btnTorch" class="btn btn-secondary hidden" style="width: 100%; margin-bottom: 10px;">🔦 Nyalakan Flash/Senter</button>
+                <div id="zoomContainer" class="hidden">
+                    <label style="font-size: 0.8rem;">🔍 Zoom:</label>
+                    <input type="range" id="zoomSlider" style="width: 100%;">
+                </div>
+            </div>
+
             <div class="form-group">
                 <label>ID Penerima</label>
                 <div class="input-group">
-                    <!-- Maksimal input 8 karakter -->
                     <input type="text" id="targetId" class="form-control" placeholder="Contoh: A1B2C3D4" maxlength="8">
-                    <button id="btnConnect" class="btn btn-primary">Kirim</button>
+                    <button id="btnConnect" class="btn btn-primary">Sambungkan</button>
                 </div>
             </div>
             
+            <p id="statusPengirim" class="text-muted"></p>
+
             <div class="video-wrapper">
-                <!-- Tombol X untuk memutus paksa koneksi dari sisi pengirim -->
                 <button id="btnDisconnectSender" class="btn-close-overlay" title="Putuskan Koneksi">✖</button>
+                <!-- Menambahkan indikator baterai/layar -->
+                <div class="screen-awake-indicator">☀️ Layar Aktif (Anti-Sleep)</div>
                 <video id="videoKirim" autoplay playsinline muted></video>
             </div>
         </div>
