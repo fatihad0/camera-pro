@@ -1,70 +1,75 @@
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap');
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Google Sans', sans-serif; background-color: #F0F4F9; color: #1F1F1F; overflow: hidden; }
-
 .hidden { display: none !important; }
 .text-muted { color: #444746; font-size: 0.9rem; }
 
-/* Layout Utama */
-.app-container { display: flex; height: 100vh; width: 100vw; }
+.app-container { display: flex; height: 100vh; width: 100vw; position: relative; }
 
-/* Sidebar Kiri */
-.sidebar { width: 280px; background-color: #F0F4F9; padding: 20px; display: flex; flex-direction: column; gap: 20px; border-right: 1px solid #E3E3E3; flex-shrink: 0; }
+/* Mobile Header & Sidebar */
+.mobile-header { display: none; background: white; padding: 15px; border-bottom: 1px solid #E3E3E3; align-items: center; gap: 15px; }
+.menu-toggle { background: transparent; border: none; font-size: 1.5rem; cursor: pointer; color: #1F1F1F; }
+.brand-mobile { font-size: 1.2rem; font-weight: 700; color: #0B57D0; }
+
+.sidebar { width: 280px; background-color: #F0F4F9; padding: 20px; display: flex; flex-direction: column; gap: 20px; border-right: 1px solid #E3E3E3; flex-shrink: 0; transition: 0.3s ease; }
 .brand { font-size: 1.4rem; font-weight: 700; color: #1F1F1F; margin-bottom: 10px; }
 .menu-section { display: flex; flex-direction: column; gap: 8px; }
 .menu-label { font-size: 0.8rem; font-weight: 700; color: #444746; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
 
-/* Tombol Navigasi Sidebar */
-.nav-btn { background: transparent; border: none; text-align: left; padding: 12px 16px; border-radius: 24px; font-size: 0.95rem; font-weight: 500; color: #1F1F1F; cursor: pointer; transition: background 0.2s; }
+.nav-btn { background: transparent; border: none; text-align: left; padding: 12px 16px; border-radius: 24px; font-size: 0.95rem; font-weight: 500; color: #1F1F1F; cursor: pointer; transition: 0.2s; }
 .nav-btn:hover { background-color: #E1E5EA; }
 .nav-btn.active { background-color: #D3E3FD; color: #041E49; }
 
-/* Konten Utama Kanan */
+/* Konten Utama */
 .main-content { flex: 1; background-color: #FFFFFF; border-radius: 24px 0 0 24px; margin: 10px 0 10px 0; padding: 24px; overflow-y: auto; box-shadow: -2px 0 8px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
 .view-panel { flex: 1; display: flex; flex-direction: column; }
 
-/* Monitor State (Tengah) */
 .center-stage { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; gap: 20px; }
 .qr-box { background: white; padding: 20px; border-radius: 16px; border: 2px solid #E3E3E3; display: inline-block; }
 .main-id { font-size: 2.5rem; letter-spacing: 2px; color: #0B57D0; margin: 0; }
 
-/* Baris Atas (ID Kanan Atas & Input Kamera) */
-.top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #E3E3E3; }
+.top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #E3E3E3; gap: 10px;}
 .id-badge-small { font-weight: 700; color: #0B57D0; background: #E8F0FE; padding: 8px 16px; border-radius: 12px; }
 .status-badge { font-size: 0.9rem; font-weight: 500; color: #146C2E; background: #C4EED0; padding: 6px 12px; border-radius: 12px; }
 
-/* Form & Input */
 .input-group { display: flex; gap: 10px; flex: 1; max-width: 500px; }
 .form-control { width: 100%; padding: 12px 16px; border: 1px solid #747775; border-radius: 12px; font-size: 1rem; font-family: inherit; }
-.form-control:focus { outline: none; border-color: #0B57D0; border-width: 2px; }
 .btn { padding: 12px 20px; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: 0.2s; }
 .btn-primary { background: #0B57D0; color: white; }
-.btn-primary:hover { background: #0842A0; }
 .btn-danger { background: #B3261E; color: white; }
 
-/* Video Elements */
+/* Grid Video */
 .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; flex: 1; }
 .video-box-container { position: relative; background: #000; border-radius: 16px; overflow: hidden; height: 100%; min-height: 400px; display: flex; flex-direction: column; }
 .video-box-container video { width: 100%; height: 100%; object-fit: cover; }
+
+/* Tombol X dan Refresh di Monitor */
 .btn-close-video { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.5); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; z-index: 10; font-size: 1rem; }
+.btn-refresh-video { position: absolute; top: 15px; right: 60px; background: rgba(0,0,0,0.5); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; z-index: 10; font-size: 1rem; }
+
+/* Dropdown Remote Kamera di Monitor */
+.remote-cam-select { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.4); padding: 8px 12px; border-radius: 8px; z-index: 10; font-size: 0.85rem; outline: none; cursor: pointer; }
+
+/* Kontrol Bawah */
 .video-controls { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 10; }
 .btn-vid-action { background: rgba(255,255,255,0.9); border: none; padding: 8px 16px; border-radius: 20px; font-weight: 600; cursor: pointer; }
 .btn-record { background: #B3261E; color: white; }
-
-/* Video Pengirim */
 .video-wrapper { position: relative; flex: 1; background: #000; border-radius: 16px; overflow: hidden; display: flex; }
-#videoKirim { width: 100%; height: 100%; object-fit: cover; }
 .mirrored { transform: scaleX(-1); }
 .screen-awake-indicator { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.5); color: white; padding: 6px 12px; border-radius: 12px; font-size: 0.8rem; z-index: 10; }
-.gallery-info { background: #F0F4F9; padding: 20px; border-radius: 16px; line-height: 1.6; margin-top: 15px; }
+.gallery-info { background: #F0F4F9; padding: 20px; border-radius: 16px; margin-top: 15px; }
 
-/* Responsive Mobile */
+/* Mode Responsif (HP) */
 @media (max-width: 768px) {
     .app-container { flex-direction: column; }
-    .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid #E3E3E3; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 10px 20px; }
-    .brand { margin-bottom: 0; }
-    .menu-section { flex-direction: row; width: 100%; overflow-x: auto; margin-top: 10px; }
-    .menu-label { display: none; }
-    .main-content { border-radius: 0; margin: 0; }
+    .mobile-header { display: flex; }
+    
+    /* Navigasi disembunyikan di HP, muncul jika tombol Hamburger diklik */
+    .sidebar { position: absolute; top: 60px; left: -100%; height: calc(100vh - 60px); width: 250px; z-index: 100; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+    .sidebar.open { left: 0; }
+    
+    .brand { display: none; }
+    .main-content { border-radius: 0; margin: 0; padding: 15px; height: calc(100vh - 60px); }
+    
+    .remote-cam-select { max-width: 150px; }
 }

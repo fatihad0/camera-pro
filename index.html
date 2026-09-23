@@ -3,16 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CamConnect Pro - Gemini Style</title>
+    <title>CamConnect Pro - Remote Control</title>
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-    <!-- Library QR Code -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Header Mobile (Muncul di layar kecil) -->
+    <div class="mobile-header">
+        <button id="menuToggle" class="menu-toggle">☰</button>
+        <div class="brand-mobile">✨ CamConnect</div>
+    </div>
+
     <div class="app-container">
         <!-- SIDEBAR (Menu Kiri) -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="brand">✨ CamConnect</div>
             
             <div class="menu-section">
@@ -22,7 +27,7 @@
                 <button id="navGaleri" class="nav-btn">🖼️ Galeri</button>
             </div>
 
-            <!-- Pengaturan Kamera (Hanya muncul jika mode Kamera dipilih) -->
+            <!-- Pengaturan Kamera Lokal -->
             <div id="sidebarKameraSettings" class="menu-section hidden">
                 <span class="menu-label">Pengaturan Kamera</span>
                 <select id="kameraSelect" class="form-control"></select>
@@ -37,39 +42,31 @@
             </div>
         </aside>
 
-        <!-- KONTEN UTAMA (Kanan) -->
+        <!-- KONTEN UTAMA -->
         <main class="main-content">
-            
             <!-- TAMPILAN MONITOR -->
             <div id="viewMonitor" class="view-panel">
-                
-                <!-- Status Belum Terhubung -->
                 <div id="monitorDisconnected" class="center-stage">
                     <h3>Siap Menerima Kamera</h3>
-                    <!-- Tempat QR Code di Tengah -->
                     <div id="qrcode" class="qr-box"></div>
-                    <!-- ID di Bawah QR -->
                     <h1 class="main-id">ID: <span id="myIdLarge">Memuat...</span></h1>
                     <p class="text-muted">Scan QR atau masukkan ID di atas pada perangkat kamera.</p>
                 </div>
 
-                <!-- Status Terhubung -->
                 <div id="monitorConnected" class="hidden">
-                    <!-- ID Pindah ke Kanan Atas -->
                     <div class="top-bar">
                         <span class="status-badge">🟢 Terhubung</span>
                         <div class="id-badge-small">ID Monitor: <span id="myIdSmall"></span></div>
                     </div>
                     <div id="videoContainer" class="video-grid"></div>
                 </div>
-
             </div>
 
-            <!-- TAMPILAN KAMERA -->
+            <!-- TAMPILAN KAMERA PENGIRIM -->
             <div id="viewKamera" class="view-panel hidden">
                 <div class="top-bar">
                     <div class="input-group">
-                        <input type="text" id="targetId" class="form-control" placeholder="Masukkan ID Monitor (8 Karakter)" maxlength="8">
+                        <input type="text" id="targetId" class="form-control" placeholder="Masukkan ID Monitor" maxlength="8">
                         <button id="btnConnect" class="btn btn-primary">Sambungkan</button>
                     </div>
                     <button id="btnDisconnectSender" class="btn btn-danger hidden">✖ Putus</button>
@@ -86,14 +83,11 @@
             <div id="viewGaleri" class="view-panel hidden">
                 <h2>Galeri & Penyimpanan</h2>
                 <div class="gallery-info">
-                    <p><b>Untuk Pengguna Komputer/Browser:</b> File foto dan video akan otomatis ditanyakan untuk disimpan (Save As) atau masuk ke folder <i>Downloads</i> Anda.</p>
-                    <p><b>Untuk Pengguna Android (APK):</b> Foto dan video akan tersimpan otomatis di Galeri internal HP (Folder Pictures/Movies).</p>
+                    <p>File rekaman dan jepretan Anda akan tersimpan otomatis di perangkat ini.</p>
                 </div>
             </div>
-
         </main>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
