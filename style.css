@@ -50,14 +50,59 @@ body { font-family: 'Google Sans', sans-serif; background-color: #F0F4F9; color:
 /* Dropdown Remote Kamera di Monitor */
 .remote-cam-select { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.6); color: white; border: 1px solid rgba(255,255,255,0.4); padding: 8px 12px; border-radius: 8px; z-index: 10; font-size: 0.85rem; outline: none; cursor: pointer; }
 
-/* Kontrol Bawah */
-.video-controls { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 10; }
-.btn-vid-action { background: rgba(255,255,255,0.9); border: none; padding: 8px 16px; border-radius: 20px; font-weight: 600; cursor: pointer; }
-.btn-record { background: #B3261E; color: white; }
-.video-wrapper { position: relative; flex: 1; background: #000; border-radius: 16px; overflow: hidden; display: flex; }
-.mirrored { transform: scaleX(-1); }
-.screen-awake-indicator { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.5); color: white; padding: 6px 12px; border-radius: 12px; font-size: 0.8rem; z-index: 10; }
-.gallery-info { background: #F0F4F9; padding: 20px; border-radius: 16px; margin-top: 15px; }
+/* Kontrol Bawah (Gaya Gemini / Modern CCTV) */
+.video-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px; /* Jarak antar tombol */
+    z-index: 10;
+    background: rgba(20, 20, 20, 0.75); /* Latar belakang gelap transparan */
+    padding: 12px 24px;
+    border-radius: 40px;
+    backdrop-filter: blur(5px); /* Efek blur ala iOS/Glassmorphism */
+    align-items: center;
+}
+
+.btn-vid-action {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.2s;
+    padding: 5px;
+}
+
+.btn-vid-action:hover {
+    transform: scale(1.1); /* Efek membesar saat disentuh/hover */
+    color: #a8c7fa; /* Berubah sedikit kebiruan saat disentuh */
+}
+
+/* Khusus tombol HD/SD */
+.quality-badge {
+    border: 2px solid currentColor;
+    border-radius: 6px;
+    padding: 2px 6px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/* Animasi saat merekam (Warna Merah) */
+.is-recording {
+    color: #EF4444 !important;
+    animation: pulse-red 1.5s infinite;
+}
+@keyframes pulse-red {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
 
 /* Mode Responsif (HP) */
 @media (max-width: 768px) {
